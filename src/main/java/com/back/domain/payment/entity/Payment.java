@@ -1,7 +1,8 @@
 package com.back.domain.payment.entity;
 
+import com.back.domain.order.entity.Order;
 import com.back.global.entity.BaseEntity;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 public class Payment extends BaseEntity {
-    private String paymentStatus;
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
     private Long amount;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Order order;
 }
