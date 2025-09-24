@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 
-public interface OrderRepository extends JpaRepository<Order, Integer> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Order o SET o.orderStatus = :shipped " +
