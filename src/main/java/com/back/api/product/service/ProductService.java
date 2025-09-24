@@ -1,0 +1,35 @@
+package com.back.api.product.service;
+
+import com.back.api.product.dto.request.ProductCreateRequest;
+import com.back.domain.product.entity.Product;
+import com.back.domain.product.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class ProductService {
+
+    private final ProductRepository productRepository;
+
+    public Long count() {
+        return productRepository.count();
+    }
+
+    @Transactional
+    public void saveAll(List<ProductCreateRequest> requests) {
+        List<Product> productList = requests.stream()
+                .map(request -> Product.builder()
+                        .name(request.name())
+                        .description(request.description())
+                        .price(request.price())
+                        .category(request.category())
+                        .build())
+                .toList();
+        productRepository.saveAll(productList);
+    }
+}
