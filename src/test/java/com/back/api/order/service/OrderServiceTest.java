@@ -40,6 +40,7 @@ public class OrderServiceTest {
         memberRepository.save(member);
 
         // 테스트용 Order 생성
+        // -> 어제 15:00:00:00 생성된 PROCESSING 주문
         OrderStatus orderStatus = OrderStatus.PROCESSING;
         LocalDate orderDate = LocalDate.now().minusDays(1);
         Order order = new Order(member, orderStatus, orderDate);
@@ -49,5 +50,55 @@ public class OrderServiceTest {
         int processComplete = orderService.dailyOrderProcess();
 
         assertThat(processComplete).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("어제 14시 ~ 오늘 14시 이외 주문 처리 불가")
+    void dailyOrderProcess_outOfRange() {
+        // 테스트용 Member 생성
+        String email = "test@exampl.com";
+        String password = "test";
+        String address = "test";
+        String postcode = "test";
+        Role role = Role.ROLE_USER;
+        Member member = new Member(email, password, address, postcode, role);
+        memberRepository.save(member);
+
+        // 테스트용 Order 생성
+        // -> 오늘 15:00:00:00에 생성된 PROCESSING 주문
+        OrderStatus orderStatus = OrderStatus.PROCESSING;
+        LocalDate orderDate = LocalDate.now();
+        Order order = new Order(member, orderStatus, orderDate);
+        order.setCreateDate(LocalDateTime.now().withHour(15).withMinute(0).withSecond(0).withNano(0));
+        orderRepository.save(order);
+
+        int processComplete = orderService.dailyOrderProcess();
+
+        assertThat(processComplete).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("PROCESSING 상태가 아닌 주문은 SHIPPED 처리 불가")
+    void dailyOrderProcess_notProcessing() {
+        // 테스트용 Member 생성
+        String email = "test@exampl.com";
+        String password = "test";
+        String address = "test";
+        String postcode = "test";
+        Role role = Role.ROLE_USER;
+        Member member = new Member(email, password, address, postcode, role);
+        memberRepository.save(member);
+
+        // 테스트용 Order 생성
+        // -> 어제 15:00:00:00에 생성된 SHIPPED 주문
+        OrderStatus orderStatus = OrderStatus.SHIPPED;
+        LocalDate orderDate = LocalDate.now().minusDays(1);
+        Order order = new Order(member, orderStatus, orderDate);
+        order.setCreateDate(LocalDateTime.now().minusDays(1).withHour(15).withMinute(0).withSecond(0).withNano(0));
+        orderRepository.save(order);
+
+        int processComplete = orderService.dailyOrderProcess();
+
+        assertThat(processComplete).isEqualTo(0);
     }
 }
