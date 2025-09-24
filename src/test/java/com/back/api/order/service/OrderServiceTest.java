@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -27,10 +28,8 @@ public class OrderServiceTest {
     @Autowired
     private OrderService orderService;
 
-    @Test
-    @DisplayName("dailyOrderProcess() 테스트를 위한 객체 생성")
+    // OrderService.dailyOrderProcess() 테스트를 위한 객체 생성 메서드
     void createForDailyOrderProcess(OrderStatus orderStatus, LocalDate orderDate, LocalDateTime createDate) {
-        // 테스트용 Member 생성
         String email = "test@exampl.com";
         String password = "test";
         String address = "test";
@@ -39,9 +38,8 @@ public class OrderServiceTest {
         Member member = new Member(email, password, address, postcode, role);
         memberRepository.save(member);
 
-        // 테스트용 Order 생성
         Order order = new Order(member, orderStatus, orderDate);
-        order.setCreateDate(createDate);
+        ReflectionTestUtils.setField(order, "createDate", createDate);
         orderRepository.save(order);
     }
 
