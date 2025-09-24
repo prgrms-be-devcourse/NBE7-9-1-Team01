@@ -29,6 +29,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
 }
 
 tasks.withType<Test> {
