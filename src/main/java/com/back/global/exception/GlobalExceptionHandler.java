@@ -27,14 +27,7 @@ public class GlobalExceptionHandler {
     // @Valid 유효성 검사 실패 시 발생하는 예외 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<?>> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
-        String message = e.getBindingResult()
-                .getAllErrors()
-                .stream()
-                .filter(error -> error instanceof FieldError)
-                .map(error -> (FieldError) error)
-                .map(error -> error.getField() + "-" + error.getCode() + "-" + error.getDefaultMessage())
-                .sorted(Comparator.comparing(String::toString))
-                .collect(Collectors.joining("\n"));
+        String message = e.getBindingResult().getFieldError().getDefaultMessage();
         log.warn("MethodArgumentNotValidException {}", e.getMessage());
         return new ResponseEntity<>(
                 ApiResponse.fail(HttpStatus.BAD_REQUEST,message)
