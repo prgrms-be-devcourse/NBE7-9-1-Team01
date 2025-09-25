@@ -7,10 +7,7 @@ import com.back.global.dto.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/order")
@@ -38,6 +35,29 @@ public class OrderController {
         OrderDto orderDto = new OrderDto(order);
 
         return ApiResponse.ok("주문 생성 완료", orderDto
+        );
+    }
+
+
+    //주문 수정
+    record OrderUpdateReqBody(
+            String email,
+            Long productId,
+            Long quantity
+    ){}
+
+    @PutMapping("{orderId}")
+    public ApiResponse<Void> updateOrder(
+            @PathVariable Long orderId,
+            @RequestBody @Valid OrderUpdateReqBody reqBody
+    ){
+        Order order = orderService.findOrderById(orderId).get();
+        orderService.updateOrder(reqBody.email(),
+                reqBody.productId(),
+                reqBody.quantity()
+        );
+        return  ApiResponse.ok(
+                "%d번 주문이 수정되었습니다".formatted(orderId), null
         );
     }
 

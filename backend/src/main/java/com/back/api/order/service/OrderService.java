@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.openmbean.CompositeData;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,8 +55,23 @@ public class OrderService {
 
     }
 
+    //주문 수정(업데이트)
+    @Transactional
+    public Order updateOrder(String email, long productId, long quantity){
+
+        Member member = memberRepository.findByEmail(email).get();
+        Product product = productRepository.findById(productId).get();
+        Order order = orderRepository.findByMember(member);
+        order.updateProduct(product, quantity);
 
 
 
+        return  orderRepository.save(order);
 
+    }
+
+
+    public Optional<Order> findOrderById(Long orderId) {
+        return orderRepository.findById(orderId);
+    }
 }
