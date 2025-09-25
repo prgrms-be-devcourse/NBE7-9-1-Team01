@@ -1,7 +1,9 @@
 package com.back.api.order.service;
 
+import com.back.domain.member.repository.MemberRepository;
 import com.back.domain.order.repository.OrderRepository;
 import com.back.domain.order.entity.OrderStatus;
+import com.back.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public int dailyOrderProcess() {
@@ -26,4 +30,8 @@ public class OrderService {
 
         return processComplete;
     }
+
+
+
+
 }
