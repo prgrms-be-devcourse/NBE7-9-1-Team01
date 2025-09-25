@@ -170,4 +170,58 @@ class ProductControllerTest {
                     .andDo(print());
         }
     }
+
+    @Nested
+    @DisplayName("제품 단건 조회 API")
+    class t3 {
+        @Test
+        @DisplayName("정상 작동")
+        void success() throws Exception {
+
+            // given
+            long targetProductId = 1;
+
+            // when
+            ResultActions resultActions = mockMvc.perform(
+                    get("/api/products/%d".formatted(targetProductId))
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            // then
+            resultActions
+                    .andExpect(handler().handlerType(ProductController.class))
+                    .andExpect(handler().methodName("getProduct"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.id").value(1))
+                    .andExpect(jsonPath("$.data.name").value("Columbia Narino"))
+                    .andExpect(jsonPath("$.data.price").value(5000L))
+                    .andExpect(jsonPath("$.data.category").value("커피콩"))
+                    .andDo(print());
+        }
+
+        @Test
+        @DisplayName("product가 존재하지 않을 때")
+        void fail2() throws Exception {
+
+            // given
+            long targetProductId = 0;
+
+            // when
+            ResultActions resultActions = mockMvc.perform(
+                    get("/api/products/%d".formatted(targetProductId))
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            // then
+            resultActions
+                    .andExpect(handler().handlerType(ProductController.class))
+                    .andExpect(handler().methodName("getProduct"))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.status").value("NOT_FOUND"))
+                    .andExpect(jsonPath("$.message").value("제품을 찾을 수 없습니다."))
+                    .andDo(print());
+        }
+    }
 }
