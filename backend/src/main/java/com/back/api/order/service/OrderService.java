@@ -1,13 +1,18 @@
 package com.back.api.order.service;
 
+import com.back.domain.member.entity.Member;
 import com.back.domain.member.repository.MemberRepository;
+import com.back.domain.order.entity.Order;
+import com.back.domain.order.entity.OrderProduct;
 import com.back.domain.order.repository.OrderRepository;
 import com.back.domain.order.entity.OrderStatus;
+import com.back.domain.product.entity.Product;
 import com.back.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -30,6 +35,24 @@ public class OrderService {
 
         return processComplete;
     }
+
+    public Order createOrder(String email, long productId, long quantity) {
+        Member member = memberRepository.findByEmail(email).get();
+        Product product = productRepository.findById(productId).get();
+
+        Order order = new Order(member);
+        order.setOrderDate(LocalDate.now());
+
+        OrderProduct orderProduct = new OrderProduct(product);
+        if(quantity > 0)
+            orderProduct.updateQuantity(quantity);
+
+        order.addOrderProduct(orderProduct);
+
+        return orderRepository.save(order);
+
+    }
+
 
 
 
