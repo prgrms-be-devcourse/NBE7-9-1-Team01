@@ -23,12 +23,18 @@ public class ProductController {
     @PatchMapping("/{id}")
     public ApiResponse<Product> update(@PathVariable Long id, @Valid @RequestBody ProductUpdateRequest request) {
         Product product = productService.update(id,request);
-        return ApiResponse.ok("%d의 제품이 수정되었습니다.".formatted(id),product);
+        return ApiResponse.ok("%d번 제품이 수정되었습니다.".formatted(id),product);
     }
 
     @GetMapping("")
     public ApiResponse<List<Product>> getAll() {
         List<Product> productList = productService.getAll();
         return ApiResponse.ok("제품 리스트 데이터입니다.",productList);
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<Product> getProduct(@PathVariable Long id) {
+        Product product = productService.getProduct(id);
+        return ApiResponse.ok("%d번 제품입니다.".formatted(id),product);
     }
 }
