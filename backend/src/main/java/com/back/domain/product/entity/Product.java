@@ -16,4 +16,9 @@ public class Product extends BaseEntity {
     private String description;
     private Long price;
     private String category;
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
 }
