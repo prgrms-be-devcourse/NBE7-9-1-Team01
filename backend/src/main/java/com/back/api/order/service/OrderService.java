@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.management.openmbean.CompositeData;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -74,4 +75,14 @@ public class OrderService {
     public Optional<Order> findOrderById(Long orderId) {
         return orderRepository.findById(orderId);
     }
+
+    public List<Order> findAll(){
+        return orderRepository.findAll();
+    }
+
+
+    public long count(){
+        return orderRepository.count();
+    }
+
 }

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/order")
 @RequiredArgsConstructor
@@ -60,5 +62,27 @@ public class OrderController {
                 "%d번 주문이 수정되었습니다".formatted(orderId), null
         );
     }
+
+    // 주문 조회
+    // 주문 단일 조회
+    @GetMapping("/{orderId}")
+    @Transactional(readOnly = true)
+    public OrderDto getOrder(
+            @PathVariable Long orderId
+    ){
+        Order order = orderService.findOrderById(orderId).get();
+        OrderDto orderDto = new OrderDto(order);
+        return orderDto;
+    }
+
+    //전체 주문 조회
+    @GetMapping
+    @Transactional(readOnly = true)
+    public List<OrderDto> getOrders(){
+        return orderService.findAll().stream()
+                .map(OrderDto::new)
+                .toList();
+    }
+
 
 }
