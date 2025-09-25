@@ -1,4 +1,4 @@
-package com.back.api.order.repository;
+package com.back.domain.order.repository;
 
 import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderStatus;
