@@ -1,8 +1,11 @@
 package com.back.api.product.service;
 
 import com.back.api.product.dto.request.ProductCreateRequest;
+import com.back.api.product.dto.request.ProductUpdateRequest;
 import com.back.domain.product.entity.Product;
 import com.back.domain.product.repository.ProductRepository;
+import com.back.global.exception.ErrorCode;
+import com.back.global.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,4 +35,17 @@ public class ProductService {
                 .toList();
         productRepository.saveAll(productList);
     }
+
+    @Transactional
+    public Product update(Long id, ProductUpdateRequest request) {
+        Product product = getById(id);
+        product.updateDescription(request);
+        return product;
+    }
+
+    public Product getById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_PRODUCT));
+    }
+
 }
