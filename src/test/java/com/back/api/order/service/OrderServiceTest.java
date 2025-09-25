@@ -46,10 +46,10 @@ public class OrderServiceTest {
     @Test
     @DisplayName("어제 14시 ~ 오늘 14시 주문 처리, PROCESSING -> SHIPPED")
     void dailyOrderProcess() {
-        // 어제 15:00:00:00에 생성된 PROCESSING 주문
+        // 오늘 14:00:00에 생성된 PROCESSING 주문
         OrderStatus orderStatus = OrderStatus.PROCESSING;
         LocalDate orderDate = LocalDate.now().minusDays(1);
-        LocalDateTime createDate = LocalDateTime.now().minusDays(1).withHour(15).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime createDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
         createForDailyOrderProcess(orderStatus, orderDate, createDate);
 
         int processComplete = orderService.dailyOrderProcess();
@@ -60,10 +60,10 @@ public class OrderServiceTest {
     @Test
     @DisplayName("어제 14시 ~ 오늘 14시 이외 주문 처리 불가")
     void dailyOrderProcess_outOfRange() {
-        // 오늘 15:00:00:00에 생성된 PROCESSING 주문
+        // 오늘 14:00:01에 생성된 PROCESSING 주문
         OrderStatus orderStatus = OrderStatus.PROCESSING;
         LocalDate orderDate = LocalDate.now();
-        LocalDateTime createDate = LocalDateTime.now().withHour(15).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime createDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(1);
         createForDailyOrderProcess(orderStatus, orderDate, createDate);
 
         int processComplete = orderService.dailyOrderProcess();
@@ -74,10 +74,10 @@ public class OrderServiceTest {
     @Test
     @DisplayName("PROCESSING 상태가 아닌 주문은 SHIPPED 처리 불가")
     void dailyOrderProcess_notProcessing() {
-        // 어제 15:00:00:00에 생성된 SHIPPED 주문
+        // 오늘 14:00:00에 생성된 SHIPPED 주문
         OrderStatus orderStatus = OrderStatus.SHIPPED;
         LocalDate orderDate = LocalDate.now().minusDays(1);
-        LocalDateTime createDate = LocalDateTime.now().minusDays(1).withHour(15).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime createDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
         createForDailyOrderProcess(orderStatus, orderDate, createDate);
 
         int processComplete = orderService.dailyOrderProcess();
