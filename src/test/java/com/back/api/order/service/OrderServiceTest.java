@@ -48,7 +48,7 @@ public class OrderServiceTest {
     void dailyOrderProcess() {
         // 오늘 14:00:00에 생성된 PROCESSING 주문
         OrderStatus orderStatus = OrderStatus.PROCESSING;
-        LocalDate orderDate = LocalDate.now().minusDays(1);
+        LocalDate orderDate = LocalDate.now();
         LocalDateTime createDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
         createForDailyOrderProcess(orderStatus, orderDate, createDate);
 
@@ -76,7 +76,7 @@ public class OrderServiceTest {
     void dailyOrderProcess_notProcessing() {
         // 오늘 14:00:00에 생성된 SHIPPED 주문
         OrderStatus orderStatus = OrderStatus.SHIPPED;
-        LocalDate orderDate = LocalDate.now().minusDays(1);
+        LocalDate orderDate = LocalDate.now();
         LocalDateTime createDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
         createForDailyOrderProcess(orderStatus, orderDate, createDate);
 
