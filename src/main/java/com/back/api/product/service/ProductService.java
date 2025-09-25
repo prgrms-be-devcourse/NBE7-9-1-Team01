@@ -38,14 +38,21 @@ public class ProductService {
 
     @Transactional
     public Product update(Long id, ProductUpdateRequest request) {
-        Product product = getById(id);
+        Product product = getProduct(id);
         product.updateDescription(request);
         return product;
     }
 
-    public Product getById(Long id) {
+    public Product getProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_PRODUCT));
     }
 
+    public List<Product> getAll() {
+        List<Product> productList = productRepository.findAll();
+        if (productList.isEmpty()) {
+            throw new ErrorException(ErrorCode.NOT_FOUND_PRODUCT);
+        }
+        return productList;
+    }
 }

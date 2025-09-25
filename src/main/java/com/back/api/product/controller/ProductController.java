@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -22,5 +24,11 @@ public class ProductController {
     public ApiResponse<Product> update(@PathVariable Long id, @Valid @RequestBody ProductUpdateRequest request) {
         Product product = productService.update(id,request);
         return ApiResponse.ok("%d의 제품이 수정되었습니다.".formatted(id),product);
+    }
+
+    @GetMapping("")
+    public ApiResponse<List<Product>> getAll() {
+        List<Product> productList = productService.getAll();
+        return ApiResponse.ok("제품 리스트 데이터입니다.",productList);
     }
 }
