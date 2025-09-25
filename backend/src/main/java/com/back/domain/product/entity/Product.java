@@ -1,5 +1,6 @@
 package com.back.domain.product.entity;
 
+
 import com.back.api.product.dto.request.ProductUpdateRequest;
 import com.back.global.entity.BaseEntity;
 import jakarta.persistence.Entity;
@@ -19,4 +20,5 @@ public class Product extends BaseEntity {
     public void updateDescription(ProductUpdateRequest request) {
         this.description = request.description();
     }
+
 }
