@@ -8,9 +8,12 @@ import com.back.domain.order.repository.OrderRepository;
 import com.back.domain.order.entity.OrderStatus;
 import com.back.domain.product.entity.Product;
 import com.back.domain.product.repository.ProductRepository;
+import com.back.global.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.management.openmbean.CompositeData;
 import java.time.LocalDate;
@@ -83,6 +86,14 @@ public class OrderService {
 
     public long count(){
         return orderRepository.count();
+    }
+
+
+    //주문 삭제
+    public void deleteOrder(long orderId){
+        Order order = orderRepository.findById(orderId).get();
+
+        orderRepository.delete(order);
     }
 
 }

@@ -84,5 +84,14 @@ public class OrderController {
                 .toList();
     }
 
+    //주문 삭제
+    @DeleteMapping("/{orderId}")
+    public ApiResponse<Void> deleteOrder(@PathVariable Long orderId){
+        orderService.deleteOrder(orderId);
+
+        return ApiResponse.ok(
+                "%d번 주문이 삭제되었습니다".formatted(orderId), null
+        );
+    }
 
 }
