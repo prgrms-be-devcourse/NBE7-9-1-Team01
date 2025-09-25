@@ -1,6 +1,6 @@
 package com.back.api.order.service;
 
-import com.back.api.order.repository.OrderRepository;
+import com.back.domain.order.repository.OrderRepository;
 import com.back.domain.order.entity.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
