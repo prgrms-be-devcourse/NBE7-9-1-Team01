@@ -95,7 +95,7 @@ class ProductControllerTest {
         void fail2() throws Exception {
 
             // given
-            long targetProductId = 10000;
+            long targetProductId = 0;
             ProductUpdateRequest request = new ProductUpdateRequest("콜롬비아 커피 원두 입니다.");
 
             // when
@@ -202,7 +202,7 @@ class ProductControllerTest {
 
         @Test
         @DisplayName("product가 존재하지 않을 때")
-        void fail2() throws Exception {
+        void fail1() throws Exception {
 
             // given
             long targetProductId = 0;
