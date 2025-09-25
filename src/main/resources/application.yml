@@ -13,3 +13,10 @@ spring:
         format_sql: true
         use_sql_comments: true
     defer-datasource-initialization: true
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: method
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
