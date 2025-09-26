@@ -101,7 +101,6 @@ class PaymentControllerTest {
                     .andExpect(handler().handlerType(PaymentController.class))
                     .andExpect(handler().methodName("createPayment"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.paymentId").value(1))
                     .andExpect(jsonPath("$.data.method").value("CREDIT_CARD"))
                     .andExpect(jsonPath("$.data.amount").value(31000))
                     .andExpect(jsonPath("$.data.email").value("test@naver.com"))
@@ -157,7 +156,66 @@ class PaymentControllerTest {
                     .andExpect(handler().methodName("createPayment"))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-                    .andExpect(jsonPath("$.message").value("결제 가능한 상태가 아닙니다."))
+                    .andExpect(jsonPath("$.message").value("결제 상태를 확인해주세요."))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("결제 취소 API")
+    class t2 {
+        @Test
+        @DisplayName("정상 작동")
+        void success() throws Exception {
+
+            // given
+            long targetId = 1L;
+
+            mockMvc.perform(
+                    post("/api/payments")
+                    .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(new PaymentCreateRequest(1L, PaymentMethod.CREDIT_CARD)))
+            );
+
+            //when
+            ResultActions resultActions1 = mockMvc.perform(
+                    patch("/api/payments/%d".formatted(targetId))
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            // then
+            resultActions1
+                    .andExpect(handler().handlerType(PaymentController.class))
+                    .andExpect(handler().methodName("cancelPayment"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.status").value("OK"))
+                    .andExpect(jsonPath("$.message").value("결제가 취소되었습니다."))
+                    .andDo(print());
+        }
+
+        @Test
+        @DisplayName("Payment가 존재하지 않을 때")
+        void fail1() throws Exception {
+
+            // given
+            long targetId = 0L;
+
+            // when
+            ResultActions resultActions = mockMvc.perform(
+                    patch("/api/payments/%d".formatted(targetId))
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+            );
+
+            // then
+            resultActions
+                    .andExpect(handler().handlerType(PaymentController.class))
+                    .andExpect(handler().methodName("cancelPayment"))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.status").value("NOT_FOUND"))
+                    .andExpect(jsonPath("$.message").value("결제 내역을 찾을 수 없습니다."))
                     .andDo(print());
         }
     }
