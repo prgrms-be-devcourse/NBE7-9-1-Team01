@@ -1,5 +1,6 @@
 package com.back.domain.order.repository;
 
+import com.back.domain.member.entity.Member;
 import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("shipped") OrderStatus shipped,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end);
+
+    Order findByMember(Member member);
 }

@@ -13,6 +13,7 @@ public enum ErrorCode {
     INVALID_ORDER_STATE(HttpStatus.BAD_REQUEST,"결제 상태를 확인해주세요."),
     NOT_FOUND_PAYMENT(HttpStatus.NOT_FOUND,"결제 내역을 찾을 수 없습니다.");
 
+
     private final HttpStatus httpStatus;
     private final String message;
 }
