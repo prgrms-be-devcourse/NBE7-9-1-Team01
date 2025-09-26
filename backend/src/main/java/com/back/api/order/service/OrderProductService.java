@@ -1,5 +1,6 @@
 package com.back.api.order.service;
 
+import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderProduct;
 import com.back.domain.order.repository.OrderProductRepository;
 import com.back.global.exception.ErrorCode;
@@ -17,8 +18,8 @@ public class OrderProductService {
     private final OrderProductRepository orderProductRepository;
 
 
-    public List<OrderProduct> getOrderProductByOrderId(Long orderId) {
-        List<OrderProduct> result = orderProductRepository.findByOrderId(orderId);
+    public List<OrderProduct> getOrderProductByOrder(Order order) {
+        List<OrderProduct> result = orderProductRepository.findByOrder(order);
         if (result.isEmpty()) {
             throw new ErrorException(ErrorCode.NOT_FOUND_ORDER);
         }
