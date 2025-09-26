@@ -52,11 +52,6 @@ public class OrderService {
         Order order = new Order(member);
         order.setOrderDate(LocalDate.now());
         order = orderRepository.save(order);
-//        OrderProduct orderProduct = new OrderProduct(product);
-//        if(quantity > 0)
-//            orderProduct.updateQuantity(quantity);
-//
-//        order.addOrderProduct(orderProduct);
         OrderProduct orderProduct = new OrderProduct(order, product, quantity);
         orderProductRepository.save(orderProduct);
 
@@ -72,15 +67,15 @@ public class OrderService {
         Order order =  orderRepository.findById(orderId).get();
         Product product = productRepository.findById(productId).get();
 
-        List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order);
-        Optional<OrderProduct> existing = orderProducts.stream()
+        List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order);           //orders를 삭제한 대신 orderProduct로 주문 상품 리스트 생성
+        Optional<OrderProduct> existing = orderProducts.stream()                                // existing에는 주문 상품을 가지고 있는지 확인.
                 .filter(op -> op.getProduct().equals(product))
                 .findFirst();
 
-        if (existing.isPresent()) {
+        if (existing.isPresent()) {                                                             //주문 수량 업데이트
             existing.get().updateQuantity(quantity);
             orderProductRepository.save(existing.get());
-        } else {
+        } else {                                                                                //상품이 없는 경우에는 새로운 주문 만들기
             OrderProduct newOrderProduct = new OrderProduct(order, product, quantity);
             orderProductRepository.save(newOrderProduct);
         }
