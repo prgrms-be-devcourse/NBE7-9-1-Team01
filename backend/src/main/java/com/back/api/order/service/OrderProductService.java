@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
+@Transactional(readOnly = true)
 public class OrderProductService {
 
     private final OrderProductRepository orderProductRepository;
@@ -25,10 +25,7 @@ public class OrderProductService {
     public List<OrderProduct> findByOrder(Order order) {
         return orderProductRepository.findByOrder(order);
 
-@Transactional(readOnly = true)
-public class OrderProductService {
-    private final OrderProductRepository orderProductRepository;
-
+    }
 
     public List<OrderProduct> getOrderProductByOrder(Order order) {
         List<OrderProduct> result = orderProductRepository.findByOrder(order);

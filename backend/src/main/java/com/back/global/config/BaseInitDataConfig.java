@@ -2,6 +2,7 @@ package com.back.global.config;
 
 import com.back.api.product.dto.request.ProductCreateRequest;
 import com.back.api.product.service.ProductService;
+import com.back.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;

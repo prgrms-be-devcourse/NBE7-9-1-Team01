@@ -32,6 +32,7 @@ public class Order extends BaseEntity {
     public Order(Member member) {
         this.member = member;
         this.orderStatus = OrderStatus.PENDING;
+    }
 
     public void updateOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
