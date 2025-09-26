@@ -1,7 +1,10 @@
 package com.back.api.order.service;
 
+import com.back.domain.order.entity.Order;
 import com.back.domain.order.repository.OrderRepository;
 import com.back.domain.order.entity.OrderStatus;
+import com.back.global.exception.ErrorCode;
+import com.back.global.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,5 +28,19 @@ public class OrderService {
         int processComplete = orderRepository.updateStatusToShipped(OrderStatus.PROCESSING, OrderStatus.SHIPPED, start, end);
 
         return processComplete;
+    }
+
+    public Order getId(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_ORDER));
+    }
+
+    // 결제를 위한 체크 메소드
+    @Transactional
+    public void validateOrderStatus(Order order, OrderStatus orderStatus) {
+        if(!order.getOrderStatus().equals(orderStatus))
+            throw new ErrorException(ErrorCode.INVALID_ORDER_STATE);
+
+        order.updateOrderStatus(OrderStatus.PAID);
     }
 }

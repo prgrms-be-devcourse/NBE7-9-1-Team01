@@ -24,4 +24,8 @@ public class Order extends BaseEntity {
     private OrderStatus orderStatus;
 
     private LocalDate orderDate;
+
+    public void updateOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }
