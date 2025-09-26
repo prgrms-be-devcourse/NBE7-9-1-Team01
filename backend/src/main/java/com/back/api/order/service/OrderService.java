@@ -113,11 +113,11 @@ public class OrderService {
 
     // 결제를 위한 체크 메소드
     @Transactional
-    public void validateOrderStatus(Order order, OrderStatus orderStatus) {
-        if(!order.getOrderStatus().equals(orderStatus))
+    public void validateOrderStatus(Order order, OrderStatus beforeStatus,OrderStatus afterStatus) {
+        if(!order.getOrderStatus().equals(beforeStatus))
             throw new ErrorException(ErrorCode.INVALID_ORDER_STATE);
 
-        order.updateOrderStatus(OrderStatus.PAID);
+        order.updateOrderStatus(afterStatus);
     }
 
 }

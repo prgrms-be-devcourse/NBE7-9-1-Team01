@@ -47,7 +47,7 @@ public class PaymentService {
 
     private Order getValidOrder(Long orderId) {
         Order order =  orderService.getId(orderId);
-        orderService.validateOrderStatus(order, OrderStatus.PENDING);
+        orderService.validateOrderStatus(order, OrderStatus.PENDING, OrderStatus.PAID);
         return order;
     }
 
@@ -61,8 +61,7 @@ public class PaymentService {
     public void cancelPayment(Long id) {
         Payment payment = getPayment(id);
         Order order = payment.getOrder();
-        orderService.validateOrderStatus(order, OrderStatus.PAID);
-        order.updateOrderStatus(OrderStatus.CANCELED);
+        orderService.validateOrderStatus(order, OrderStatus.PAID, OrderStatus.CANCELED);
     }
 
     public Payment getPayment(Long id) {
