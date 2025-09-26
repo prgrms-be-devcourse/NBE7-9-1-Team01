@@ -1,9 +1,11 @@
 package com.back.api.order.service;
 
+import com.back.api.order.dto.OrderDto;
 import com.back.domain.member.entity.Member;
 import com.back.domain.member.repository.MemberRepository;
 import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderProduct;
+import com.back.domain.order.repository.OrderProductRepository;
 import com.back.domain.order.repository.OrderRepository;
 import com.back.domain.order.entity.OrderStatus;
 import com.back.domain.product.entity.Product;
@@ -28,6 +30,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
+    private final OrderProductRepository orderProductRepository;
 
     @Transactional
     public int dailyOrderProcess() {
@@ -41,37 +44,69 @@ public class OrderService {
 
         return processComplete;
     }
-
-    public Order createOrder(String email, long productId, long quantity) {
+    @Transactional
+    public OrderDto createOrder(String email, long productId, long quantity) {
         Member member = memberRepository.findByEmail(email).get();
         Product product = productRepository.findById(productId).get();
 
         Order order = new Order(member);
         order.setOrderDate(LocalDate.now());
+        order = orderRepository.save(order);
+//        OrderProduct orderProduct = new OrderProduct(product);
+//        if(quantity > 0)
+//            orderProduct.updateQuantity(quantity);
+//
+//        order.addOrderProduct(orderProduct);
+        OrderProduct orderProduct = new OrderProduct(order, product, quantity);
+        orderProductRepository.save(orderProduct);
 
-        OrderProduct orderProduct = new OrderProduct(product);
-        if(quantity > 0)
-            orderProduct.updateQuantity(quantity);
-
-        order.addOrderProduct(orderProduct);
-
-        return orderRepository.save(order);
+        List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order);
+        return new OrderDto(order, orderProducts);
 
     }
 
     //주문 수정(업데이트)
     @Transactional
-    public Order updateOrder(String email, long productId, long quantity){
+    public OrderDto updateOrder(long orderId, long productId, long quantity){
 
-        Member member = memberRepository.findByEmail(email).get();
+        Order order =  orderRepository.findById(orderId).get();
         Product product = productRepository.findById(productId).get();
-        Order order = orderRepository.findByMember(member);
-        order.updateProduct(product, quantity);
+
+        List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order);
+        Optional<OrderProduct> existing = orderProducts.stream()
+                .filter(op -> op.getProduct().equals(product))
+                .findFirst();
+
+        if (existing.isPresent()) {
+            existing.get().updateQuantity(quantity);
+            orderProductRepository.save(existing.get());
+        } else {
+            OrderProduct newOrderProduct = new OrderProduct(order, product, quantity);
+            orderProductRepository.save(newOrderProduct);
+        }
 
 
+        orderProducts = orderProductRepository.findByOrder(order);
+        return new OrderDto(order, orderProducts);
 
-        return  orderRepository.save(order);
+    }
 
+    @Transactional(readOnly = true)
+    public OrderDto getOrderDto(long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order);
+        return new OrderDto(order, orderProducts);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderDto> getAllOrdersDto() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream()
+                .map(order -> {
+                    List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order);
+                    return new OrderDto(order, orderProducts);
+                })
+                .toList();
     }
 
 

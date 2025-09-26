@@ -33,8 +33,7 @@ public class OrderController {
     public ApiResponse<OrderDto> createOrder(
             @RequestBody @Valid OrderCreateReqBody reqBody
     ){
-        Order order = orderService.createOrder(reqBody.email(), reqBody.productId(), reqBody.quantity());
-        OrderDto orderDto = new OrderDto(order);
+        OrderDto orderDto = orderService.createOrder(reqBody.email(), reqBody.productId(), reqBody.quantity());
 
         return ApiResponse.ok("주문 생성 완료", orderDto
         );
@@ -43,7 +42,6 @@ public class OrderController {
 
     //주문 수정
     record OrderUpdateReqBody(
-            String email,
             Long productId,
             Long quantity
     ){}
@@ -53,11 +51,7 @@ public class OrderController {
             @PathVariable Long orderId,
             @RequestBody @Valid OrderUpdateReqBody reqBody
     ){
-        Order order = orderService.findOrderById(orderId).get();
-        orderService.updateOrder(reqBody.email(),
-                reqBody.productId(),
-                reqBody.quantity()
-        );
+        OrderDto orderDto = orderService.updateOrder(orderId, reqBody.productId(), reqBody.quantity());
         return  ApiResponse.ok(
                 "%d번 주문이 수정되었습니다".formatted(orderId), null
         );
@@ -70,8 +64,7 @@ public class OrderController {
     public OrderDto getOrder(
             @PathVariable Long orderId
     ){
-        Order order = orderService.findOrderById(orderId).get();
-        OrderDto orderDto = new OrderDto(order);
+        OrderDto orderDto = orderService.getOrderDto(orderId);
         return orderDto;
     }
 
@@ -79,9 +72,8 @@ public class OrderController {
     @GetMapping
     @Transactional(readOnly = true)
     public List<OrderDto> getOrders(){
-        return orderService.findAll().stream()
-                .map(OrderDto::new)
-                .toList();
+        List<OrderDto> orders = orderService.getAllOrdersDto();
+        return orders;
     }
 
     //주문 삭제

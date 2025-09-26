@@ -1,6 +1,7 @@
 package com.back.api.order.service;
 
-import com.back.api.member.repository.MemberRepository;
+import com.back.domain.member.repository.MemberRepository;
+import com.back.domain.order.entity.OrderProduct;
 import com.back.domain.order.repository.OrderRepository;
 import com.back.domain.member.entity.Member;
 import com.back.domain.member.entity.Role;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class OrderServiceTest {
     @Autowired
-    private MemberRepository memberRepository;
+    private  MemberRepository memberRepository;
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -41,6 +43,8 @@ public class OrderServiceTest {
         Order order = new Order(member, orderStatus, orderDate);
         ReflectionTestUtils.setField(order, "createDate", createDate);
         orderRepository.save(order);
+
+
     }
 
     @Test

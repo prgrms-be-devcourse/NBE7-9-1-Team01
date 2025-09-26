@@ -9,20 +9,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record OrderDto(
-        Long orderId,                // 주문 ID
-        String memberEmail,          // 주문자 이메일
-        LocalDate orderDate,         // 주문일
-        List<OrderProductDto> orderProducts  // 주문 상품 목록
+        Long orderId,
+        String memberEmail,
+        LocalDate orderDate,
+        List<OrderProductDto> orderProducts
 ) {
-    // Order 엔티티를 DTO로 변환하는 생성자
-    public OrderDto(Order order) {
+    // Order 엔티티를 Dto로 변환하는 생성자
+    public OrderDto(Order order, List<OrderProduct> orderProducts) {
         this(
                 order.getId(),
                 order.getMember().getEmail(),
                 order.getOrderDate(),
-                order.getOrders().stream()
+                orderProducts.stream()
                         .map(OrderProductDto::new)
                         .collect(Collectors.toList())
         );
     }
+
 }
