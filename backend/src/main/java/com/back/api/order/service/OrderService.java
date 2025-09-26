@@ -1,5 +1,6 @@
 package com.back.api.order.service;
 
+
 import com.back.api.order.dto.OrderDto;
 import com.back.domain.member.entity.Member;
 import com.back.domain.member.repository.MemberRepository;
@@ -128,6 +129,21 @@ public class OrderService {
         Order order = orderRepository.findById(orderId).get();
 
         orderRepository.delete(order);
+    }
+
+
+    public Order getId(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_ORDER));
+    }
+
+    // 결제를 위한 체크 메소드
+    @Transactional
+    public void validateOrderStatus(Order order, OrderStatus orderStatus) {
+        if(!order.getOrderStatus().equals(orderStatus))
+            throw new ErrorException(ErrorCode.INVALID_ORDER_STATE);
+
+        order.updateOrderStatus(OrderStatus.PAID);
     }
 
 }

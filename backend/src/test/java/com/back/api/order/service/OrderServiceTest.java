@@ -1,7 +1,6 @@
 package com.back.api.order.service;
 
 import com.back.domain.member.repository.MemberRepository;
-import com.back.domain.order.entity.OrderProduct;
 import com.back.domain.order.repository.OrderRepository;
 import com.back.domain.member.entity.Member;
 import com.back.domain.member.entity.Role;
