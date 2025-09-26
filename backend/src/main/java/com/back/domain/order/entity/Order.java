@@ -4,16 +4,15 @@ import com.back.domain.member.entity.Member;
 import com.back.domain.product.entity.Product;
 import com.back.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -35,9 +34,15 @@ public class Order extends BaseEntity {
 //        this.orders = new ArrayList<>();
     }
 
-    public void setOrderDate(LocalDate now) {
-        this.orderDate = now;
-    }
+//    public void setOrderDate(LocalDate now) {
+//        this.orderDate = now;
+//    }
+
+//    public Order(Member member, LocalDate now, OrderStatus orderStatus) {
+//        this.member = member;
+//        this.orderDate = LocalDate.now();
+//        this.orderStatus = OrderStatus.PENDING;
+//    }
 
 
     //    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true, fetch = FetchType.LAZY)

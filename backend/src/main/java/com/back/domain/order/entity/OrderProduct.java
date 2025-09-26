@@ -28,9 +28,9 @@ public class OrderProduct extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public void setCategory(String category) {
-        this.product.setCategory(category);
-    }
+//    public void setCategory(String category) {
+//        this.product.setCategory(category);
+//    }
 
 
     public void setOrder(Order order) {

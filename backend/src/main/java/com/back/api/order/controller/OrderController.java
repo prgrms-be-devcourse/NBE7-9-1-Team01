@@ -29,7 +29,6 @@ public class OrderController {
     ){}
 
     @PostMapping
-    @Transactional
     public ApiResponse<OrderDto> createOrder(
             @RequestBody @Valid OrderCreateReqBody reqBody
     ){
@@ -60,7 +59,6 @@ public class OrderController {
     // 주문 조회
     // 주문 단일 조회
     @GetMapping("/{orderId}")
-    @Transactional(readOnly = true)
     public OrderDto getOrder(
             @PathVariable Long orderId
     ){
@@ -70,7 +68,6 @@ public class OrderController {
 
     //전체 주문 조회
     @GetMapping
-    @Transactional(readOnly = true)
     public List<OrderDto> getOrders(){
         List<OrderDto> orders = orderService.getAllOrdersDto();
         return orders;

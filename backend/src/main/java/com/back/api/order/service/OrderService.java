@@ -3,6 +3,7 @@ package com.back.api.order.service;
 import com.back.api.order.dto.OrderDto;
 import com.back.domain.member.entity.Member;
 import com.back.domain.member.repository.MemberRepository;
+import com.back.domain.member.service.MemberService;
 import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderProduct;
 import com.back.domain.order.repository.OrderProductRepository;
@@ -10,7 +11,11 @@ import com.back.domain.order.repository.OrderRepository;
 import com.back.domain.order.entity.OrderStatus;
 import com.back.domain.product.entity.Product;
 import com.back.domain.product.repository.ProductRepository;
+import com.back.domain.product.service.ProductService;
 import com.back.global.dto.response.ApiResponse;
+import com.back.global.exception.ErrorCode;
+import com.back.global.exception.ErrorException;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +26,7 @@ import javax.management.openmbean.CompositeData;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -28,9 +34,10 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final MemberRepository memberRepository;
-    private final ProductRepository productRepository;
-    private final OrderProductRepository orderProductRepository;
+    private final OrderProductService orderProductService;
+    private final MemberService memberService;
+    private final ProductService productService;
+
 
     @Transactional
     public int dailyOrderProcess() {
@@ -46,16 +53,20 @@ public class OrderService {
     }
     @Transactional
     public OrderDto createOrder(String email, long productId, long quantity) {
-        Member member = memberRepository.findByEmail(email).get();
-        Product product = productRepository.findById(productId).get();
+        Member member = memberService.findByEmail(email);
+        Product product = productService.findById(productId);
 
-        Order order = new Order(member);
-        order.setOrderDate(LocalDate.now());
+//        Order order = new Order(member, LocalDate.now(), OrderStatus.PENDING);
+        Order order = Order.builder()
+                .member(member)
+                .orderDate(LocalDate.now())
+                .orderStatus(OrderStatus.PENDING)
+                .build();
         order = orderRepository.save(order);
         OrderProduct orderProduct = new OrderProduct(order, product, quantity);
-        orderProductRepository.save(orderProduct);
+        orderProductService.save(orderProduct);
 
-        List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order);
+        List<OrderProduct> orderProducts = orderProductService.findByOrder(order);
         return new OrderDto(order, orderProducts);
 
     }
@@ -64,32 +75,25 @@ public class OrderService {
     @Transactional
     public OrderDto updateOrder(long orderId, long productId, long quantity){
 
-        Order order =  orderRepository.findById(orderId).get();
-        Product product = productRepository.findById(productId).get();
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_ORDER));
+        Product product = productService.findById(productId);
 
-        List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order);           //orders를 삭제한 대신 orderProduct로 주문 상품 리스트 생성
-        Optional<OrderProduct> existing = orderProducts.stream()                                // existing에는 주문 상품을 가지고 있는지 확인.
+        OrderProduct orderProduct = orderProductService.findByOrder(order).stream()
                 .filter(op -> op.getProduct().equals(product))
-                .findFirst();
+                .findFirst()
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_ORDER));
 
-        if (existing.isPresent()) {                                                             //주문 수량 업데이트
-            existing.get().updateQuantity(quantity);
-            orderProductRepository.save(existing.get());
-        } else {                                                                                //상품이 없는 경우에는 새로운 주문 만들기
-            OrderProduct newOrderProduct = new OrderProduct(order, product, quantity);
-            orderProductRepository.save(newOrderProduct);
-        }
+        orderProduct.updateQuantity(quantity);
+        order = orderRepository.save(order);
+        List<OrderProduct> orderProducts = orderProductService.findByOrder(order);
 
-
-        orderProducts = orderProductRepository.findByOrder(order);
         return new OrderDto(order, orderProducts);
-
     }
 
     @Transactional(readOnly = true)
     public OrderDto getOrderDto(long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow();
-        List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order);
+        List<OrderProduct> orderProducts = orderProductService.findByOrder(order);
         return new OrderDto(order, orderProducts);
     }
 
@@ -98,26 +102,26 @@ public class OrderService {
         List<Order> orders = orderRepository.findAll();
         return orders.stream()
                 .map(order -> {
-                    List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order);
+                    List<OrderProduct> orderProducts = orderProductService.findByOrder(order);
                     return new OrderDto(order, orderProducts);
                 })
                 .toList();
     }
 
-
-    public Optional<Order> findOrderById(Long orderId) {
-        return orderRepository.findById(orderId);
-    }
-
-    public List<Order> findAll(){
-        return orderRepository.findAll();
-    }
-
-
-    public long count(){
-        return orderRepository.count();
-    }
-
+//
+//    public Optional<Order> findOrderById(Long orderId) {
+//        return orderRepository.findById(orderId);
+//    }
+//
+//    public List<Order> findAll(){
+//        return orderRepository.findAll();
+//    }
+//
+//
+//    public long count(){
+//        return orderRepository.count();
+//    }
+//
 
     //주문 삭제
     public void deleteOrder(long orderId){
