@@ -1,6 +1,7 @@
 package com.back.api.payment.controller;
 
 import com.back.api.payment.dto.request.PaymentCreateRequest;
+import com.back.api.payment.dto.response.PaymentCreateResponse;
 import com.back.api.payment.service.PaymentService;
 import com.back.domain.payment.entity.Payment;
 import com.back.global.dto.response.ApiResponse;
@@ -19,9 +20,9 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping
-    public ApiResponse<Payment> createPayment(@RequestBody PaymentCreateRequest request) {
-        Payment payment = paymentService.createPayment(request);
-        return ApiResponse.ok("결제가 완료되었습니다.",payment);
+    public ApiResponse<PaymentCreateResponse> createPayment(@RequestBody PaymentCreateRequest request) {
+        PaymentCreateResponse response = paymentService.createPayment(request);
+        return ApiResponse.ok("결제가 완료되었습니다.",response);
     }
 
 }
