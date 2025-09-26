@@ -4,6 +4,8 @@ import com.back.api.order.dto.OrderDto;
 import com.back.api.order.service.OrderService;
 import com.back.domain.order.entity.Order;
 import com.back.global.dto.response.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/order")
 @RequiredArgsConstructor
-
+@Tag(name = "2. [제품]", description = "주문 관련 API입니다.")
 public class OrderController {
 
     private final OrderService orderService;
@@ -29,6 +31,7 @@ public class OrderController {
     ){}
 
     @PostMapping
+    @Operation(summary = "주문 생성 API", description = "주문을 생성합니다.")
     public ApiResponse<OrderDto> createOrder(
             @RequestBody @Valid OrderCreateReqBody reqBody
     ){
@@ -44,7 +47,7 @@ public class OrderController {
             Long productId,
             Long quantity
     ){}
-
+    @Operation(summary = "주문 수정 API", description = "주문을 수정합니다.")
     @PutMapping("{orderId}")
     public ApiResponse<Void> updateOrder(
             @PathVariable Long orderId,
@@ -58,6 +61,7 @@ public class OrderController {
 
     // 주문 조회
     // 주문 단일 조회
+    @Operation(summary = "주문 다건 조회 API", description = "주문 리스트를 조회합니다.")
     @GetMapping("/{orderId}")
     public OrderDto getOrder(
             @PathVariable Long orderId
@@ -67,6 +71,7 @@ public class OrderController {
     }
 
     //전체 주문 조회
+    @Operation(summary = "주문 다건 조회 API", description = "주문 리스트를 조회합니다.")
     @GetMapping
     public List<OrderDto> getOrders(){
         List<OrderDto> orders = orderService.getAllOrdersDto();
@@ -74,6 +79,7 @@ public class OrderController {
     }
 
     //주문 삭제
+    @Operation(summary = "주문 삭제 API", description = "주문을 수정합니다.")
     @DeleteMapping("/{orderId}")
     public ApiResponse<Void> deleteOrder(@PathVariable Long orderId){
         orderService.deleteOrder(orderId);
