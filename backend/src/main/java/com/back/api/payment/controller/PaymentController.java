@@ -1,7 +1,9 @@
 package com.back.api.payment.controller;
 
+import com.back.api.payment.dto.request.PaymentCreateRequest;
 import com.back.api.payment.service.PaymentService;
 import com.back.domain.payment.entity.Payment;
+import com.back.global.dto.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,9 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping
-    public void createPayment(@RequestBody Payment payment) {}
+    public ApiResponse<Payment> createPayment(@RequestBody PaymentCreateRequest request) {
+        Payment payment = paymentService.createPayment(request);
+        return ApiResponse.ok("결제가 완료되었습니다.",payment);
+    }
 
 }
