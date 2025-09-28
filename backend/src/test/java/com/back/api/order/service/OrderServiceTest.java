@@ -11,16 +11,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 public class OrderServiceTest {
     @Autowired
     private  MemberRepository memberRepository;
@@ -30,7 +29,7 @@ public class OrderServiceTest {
     private OrderService orderService;
 
     // OrderService.dailyOrderProcess() 테스트를 위한 객체 생성 메서드
-    void createForDailyOrderProcess(OrderStatus orderStatus, LocalDate orderDate, LocalDateTime createDate) {
+    void createForDailyOrderProcess(OrderStatus orderStatus, LocalDateTime orderDate) {
         String email = "test@exampl.com";
         String password = "test";
         String address = "test";
@@ -40,10 +39,8 @@ public class OrderServiceTest {
         memberRepository.save(member);
 
         Order order = new Order(member, orderStatus, orderDate);
-        ReflectionTestUtils.setField(order, "createDate", createDate);
+
         orderRepository.save(order);
-
-
     }
 
     @Test
@@ -51,9 +48,8 @@ public class OrderServiceTest {
     void dailyOrderProcess() {
         // 오늘 14:00:00에 생성된 PROCESSING 주문
         OrderStatus orderStatus = OrderStatus.PROCESSING;
-        LocalDate orderDate = LocalDate.now();
-        LocalDateTime createDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
-        createForDailyOrderProcess(orderStatus, orderDate, createDate);
+        LocalDateTime orderDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
+        createForDailyOrderProcess(orderStatus, orderDate);
 
         int processComplete = orderService.dailyOrderProcess();
 
@@ -65,9 +61,8 @@ public class OrderServiceTest {
     void dailyOrderProcess_outOfRange() {
         // 오늘 14:00:01에 생성된 PROCESSING 주문
         OrderStatus orderStatus = OrderStatus.PROCESSING;
-        LocalDate orderDate = LocalDate.now();
-        LocalDateTime createDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(1);
-        createForDailyOrderProcess(orderStatus, orderDate, createDate);
+        LocalDateTime orderDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(1);
+        createForDailyOrderProcess(orderStatus, orderDate);
 
         int processComplete = orderService.dailyOrderProcess();
 
@@ -79,9 +74,8 @@ public class OrderServiceTest {
     void dailyOrderProcess_notProcessing() {
         // 오늘 14:00:00에 생성된 SHIPPED 주문
         OrderStatus orderStatus = OrderStatus.SHIPPED;
-        LocalDate orderDate = LocalDate.now();
-        LocalDateTime createDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
-        createForDailyOrderProcess(orderStatus, orderDate, createDate);
+        LocalDateTime orderDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
+        createForDailyOrderProcess(orderStatus, orderDate);
 
         int processComplete = orderService.dailyOrderProcess();
 
