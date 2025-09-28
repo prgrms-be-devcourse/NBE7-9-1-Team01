@@ -13,6 +13,8 @@ import com.back.domain.product.entity.Product;
 import com.back.global.exception.ErrorCode;
 import com.back.global.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -120,4 +122,7 @@ public class OrderService {
         order.updateOrderStatus(afterStatus);
     }
 
+    public Page<Order> getOrderStats(Pageable pageable) {
+        return orderRepository.findAllByOrderByOrderDateDesc(pageable);
+    }
 }
