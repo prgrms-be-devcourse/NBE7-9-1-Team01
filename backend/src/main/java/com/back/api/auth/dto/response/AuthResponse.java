@@ -1,6 +1,6 @@
 package com.back.api.auth.dto.response;
 
-public record AuthResponese (
+public record AuthResponse(
     boolean success,
     String message
         ){}
