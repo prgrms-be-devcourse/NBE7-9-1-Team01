@@ -1,4 +1,8 @@
 package com.back.api.auth.dto.request;
 
-public class AuthRequest {
-}
+public record AuthRequest (
+        String email,
+        String password
+)
+
+{}
