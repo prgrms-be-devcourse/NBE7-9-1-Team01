@@ -8,11 +8,12 @@ import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderProduct;
 import com.back.domain.order.entity.OrderStatus;
 import com.back.domain.payment.entity.Payment;
+import com.back.domain.payment.event.PaymentCompletedEvent;
 import com.back.domain.payment.repository.PaymentRepository;
 import com.back.global.exception.ErrorCode;
 import com.back.global.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,8 @@ public class PaymentService {
 
     private final OrderService orderService;
 
+    private final ApplicationEventPublisher events;
+
     @Transactional
     public PaymentCreateResponse createPayment(PaymentCreateRequest request) {
         Order order = getValidOrder(request.orderId());
@@ -42,6 +45,29 @@ public class PaymentService {
                 .build();
 
         paymentRepository.save(payment);
+
+        //결제 완료 이벤트
+        var orderProducts = orderProductService.getOrderProductByOrder(order);
+        var lines = orderProducts.stream()
+                .map(op -> new PaymentCompletedEvent.OrderLine(
+                        op.getProduct().getName(),
+                        op.getQuantity().intValue(),
+                        op.getProduct().getPrice(),
+                        op.getProduct().getPrice() * op.getQuantity()
+                ))
+                .toList();
+
+        events.publishEvent(new PaymentCompletedEvent(
+                payment.getId(),
+                order.getId(),
+                order.getMember().getEmail(),
+                payment.getPaymentMethod().getMethodName(),
+                payment.getAmount(),
+                payment.getCreateDate(),
+                order.getMember().getAddress(),
+                lines
+        ));
+
         return PaymentCreateResponse.from(payment, order.getMember());
     }
 
