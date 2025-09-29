@@ -60,12 +60,12 @@ class PaymentControllerTest {
 
     @BeforeAll
     void setUp() {
-        Member member = new Member("test@naver.com", null, "경기도 부천", "55555", Role.ROLE_USER);
+        Member member = new Member("test@naver.com", null, Role.ROLE_USER);
         memberRepository.save(member);
         Product product1 = productRepository.findById(1L).orElse(null);
         Product product2 = productRepository.findById(2L).orElse(null);
-        Order order = new Order(member, OrderStatus.PENDING, LocalDateTime.now());
-        Order order1 = new Order(member, OrderStatus.CANCELED, LocalDateTime.now());
+        Order order = new Order(member, OrderStatus.PENDING, LocalDateTime.now(), "경기도 부천", "55555");
+        Order order1 = new Order(member, OrderStatus.CANCELED, LocalDateTime.now(), "경기도 부천", "55555");
         orderRepository.save(order);
         orderRepository.save(order1);
 
@@ -105,8 +105,6 @@ class PaymentControllerTest {
                     .andExpect(jsonPath("$.data.method").value("CREDIT_CARD"))
                     .andExpect(jsonPath("$.data.amount").value(31000))
                     .andExpect(jsonPath("$.data.email").value("test@naver.com"))
-                    .andExpect(jsonPath("$.data.postcode").value("55555"))
-                    .andExpect(jsonPath("$.data.address").value("경기도 부천"))
                     .andDo(print());
         }
 
