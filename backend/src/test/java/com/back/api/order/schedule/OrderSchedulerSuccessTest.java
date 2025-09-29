@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @TestPropertySource(properties = {
-        "order.schedule.cron=*/3 * * * * ?" // 이 클래스 안에서는 cron이 3초마다 실행
+        "order.schedule.cron=*/2 * * * * ?" // 이 클래스 안에서는 cron이 2초마다 실행
 })
 @ActiveProfiles("test")
 class OrderSchedulerSuccessTest {
@@ -43,8 +43,8 @@ class OrderSchedulerSuccessTest {
         Order order = new Order(member, orderStatus, orderDate);
         orderRepository.save(order);
 
-        // 3초마다 실행되므로, 4초 기다리면 최소 한 번은 주문 스케줄러가 실행됨
-        Thread.sleep(4000);
+        // 2초마다 실행되므로, 3초 기다리면 최소 한 번은 주문 스케줄러가 실행됨
+        Thread.sleep(3000);
 
         Order resultOrder = orderRepository.findByMember(member);
         assertThat(resultOrder.getOrderStatus()).isEqualTo(OrderStatus.SHIPPED);
