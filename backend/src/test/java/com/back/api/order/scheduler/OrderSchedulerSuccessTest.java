@@ -1,4 +1,4 @@
-package com.back.api.order.schedule;
+package com.back.api.order.scheduler;
 
 import com.back.domain.member.entity.Member;
 import com.back.domain.member.entity.Role;
