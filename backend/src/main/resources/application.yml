@@ -18,6 +18,14 @@ spring:
     port: 587
     username: prdc.team01
     password: ${MAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+    logging:
+      level:
+        org.springframework.web: DEBUG
+        org.springframework.mail: DEBUG
+        jakarta.mail: DEBUG
 
 springdoc:
   swagger-ui:
