@@ -14,10 +14,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Order o SET o.orderStatus = :shipped " +
-            "WHERE o.orderStatus = :processing " +
+            "WHERE o.orderStatus = :paid " +
             "AND o.orderDate BETWEEN :start AND :end")
     int updateStatusToShipped(
-            @Param("processing") OrderStatus processing,
+            @Param("paid") OrderStatus paid,
             @Param("shipped") OrderStatus shipped,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end);
