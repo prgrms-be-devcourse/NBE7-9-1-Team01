@@ -1,6 +1,7 @@
 package com.back.api.order.service;
 
 
+import com.back.api.order.dto.response.SalesResponse;
 import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderProduct;
 import com.back.domain.order.repository.OrderProductRepository;
@@ -9,6 +10,8 @@ import com.back.global.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -33,5 +36,9 @@ public class OrderProductService {
             throw new ErrorException(ErrorCode.NOT_FOUND_ORDER);
         }
         return result;
+    }
+
+    public List<SalesResponse> getSales(LocalDate startDate, LocalDate endDate) {
+        return orderProductRepository.getSalesByProduct(startDate, endDate);
     }
 }

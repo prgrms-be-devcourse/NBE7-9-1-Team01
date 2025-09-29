@@ -4,7 +4,6 @@ import com.back.domain.member.entity.Member;
 import com.back.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Builder

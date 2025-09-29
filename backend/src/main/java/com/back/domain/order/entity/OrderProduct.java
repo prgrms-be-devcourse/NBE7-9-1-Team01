@@ -1,9 +1,7 @@
 package com.back.domain.order.entity;
 
-import com.back.domain.payment.entity.Payment;
 import com.back.domain.product.entity.Product;
 import com.back.global.entity.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

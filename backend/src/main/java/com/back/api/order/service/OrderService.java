@@ -2,6 +2,9 @@ package com.back.api.order.service;
 
 
 import com.back.api.order.dto.OrderDto;
+import com.back.api.order.dto.requset.SalesRequest;
+import com.back.api.order.dto.response.OrderStatusResponse;
+import com.back.api.order.dto.response.SalesResponse;
 import com.back.api.product.service.ProductService;
 import com.back.domain.member.entity.Member;
 import com.back.domain.member.entity.Role;
@@ -12,11 +15,16 @@ import com.back.domain.order.entity.OrderProduct;
 import com.back.domain.order.repository.OrderRepository;
 import com.back.domain.order.entity.OrderStatus;
 import com.back.domain.product.entity.Product;
+import com.back.global.dto.requset.PageRequestDto;
+import com.back.global.dto.response.PageResponse;
 import com.back.global.exception.ErrorCode;
 import com.back.global.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -132,4 +140,46 @@ public class OrderService {
         order.updateOrderStatus(afterStatus);
     }
 
+    public PageResponse<OrderStatusResponse> getOrderStats(PageRequestDto request) {
+        PageRequestDto requestDto = validRequest(request);
+        Pageable pageable = getPageable(requestDto);
+        Page<OrderStatusResponse> orderPage = orderRepository.findAllByOrderByOrderDateDesc(pageable)
+                .map(OrderStatusResponse::from);
+        return PageResponse.of(orderPage);
+    }
+
+    private PageRequestDto validRequest(PageRequestDto request) {
+        if(request.sort() == null || request.sort().isBlank()){
+            request = new PageRequestDto(request.page(), request.size(), "orderDate", "desc");
+        }
+        return request;
+    }
+
+    private Pageable getPageable(PageRequestDto request) {
+        return request.toPageable();
+    }
+
+    public List<SalesResponse> getSales(SalesRequest request) {
+        SalesRequest requestDto = validSalesRequest(request);
+        return orderProductService.getSales(requestDto.startDate(), requestDto.endDate());
+    }
+
+    private SalesRequest validSalesRequest(SalesRequest request) {
+        LocalDate startDate = request.startDate();
+        LocalDate endDate = request.endDate();
+
+        if (startDate == null) {
+            startDate = LocalDate.now().minusMonths(1);
+        }
+
+        if (endDate == null) {
+            endDate = LocalDate.now();
+        }
+
+        if (startDate.isAfter(endDate)) {
+            throw new ErrorException(ErrorCode.INVALID_DATE_RANGE);
+        }
+
+        return request;
+    }
 }
