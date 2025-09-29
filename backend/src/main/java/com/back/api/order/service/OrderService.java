@@ -36,11 +36,12 @@ public class OrderService {
         LocalDateTime start = yesterday.withHour(14).withMinute(0).withSecond(0);
         LocalDateTime end = now.withHour(14).withMinute(0).withSecond(0);
 
-        // PROCESSING -> SHIPPED 처리 및 처리 완료된 주문 개수 반환
-        int processComplete = orderRepository.updateStatusToShipped(OrderStatus.PROCESSING, OrderStatus.SHIPPED, start, end);
+        // PAID -> SHIPPED 처리 및 처리 완료된 주문 개수 반환
+        int processComplete = orderRepository.updateStatusToShipped(OrderStatus.PAID, OrderStatus.SHIPPED, start, end);
 
         return processComplete;
     }
+
     @Transactional
     public OrderDto createOrder(String email, long productId, long quantity) {
         Member member = memberService.findByEmail(email);
