@@ -28,7 +28,17 @@ public class AdminOrderController {
     // 주문 통계
     @GetMapping("/stats")
     @Operation(summary = "주문 통계 API", description = "주문 통계를 조회하는 API입니다.")
-    public ApiResponse<PageResponse<OrderStatusResponse>> getOrderStats(@RequestBody PageRequestDto request) {
+    public ApiResponse<PageResponse<OrderStatusResponse>> getOrderStats(
+            @Parameter(description = "요청 페이지 번호", example = "0")
+            @RequestParam int page,
+            @Parameter(description = "페이지 크기", example = "10")
+            @RequestParam int size,
+            @Parameter(description = "정렬 기준")
+            @RequestParam(required = false) String sort,
+            @Parameter(description = "정렬 방향", example = "DESC")
+            @RequestParam String direction
+            ) {
+        PageRequestDto request = new PageRequestDto(page, size, sort, direction);
         PageResponse<OrderStatusResponse> responses = orderService.getOrderStats(request);
         return ApiResponse.ok("주문 통계 조회 성공",responses);
     }
@@ -36,10 +46,10 @@ public class AdminOrderController {
     @Operation(summary = "판매량 조회 API", description = "판매량을 조회하는 API입니다.")
     @GetMapping("/sales")
     public ApiResponse<List<SalesResponse>> getSales(
-            @Parameter(description = "조회 시작 날짜", example = "2023-01-01")
+            @Parameter(description = "조회 시작 날짜", example = "2025-09-01")
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 
-            @Parameter(description = "조회 종료 날짜", example = "2023-01-31")
+            @Parameter(description = "조회 종료 날짜", example = "2025-09-30")
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
     ) {
         SalesRequest request = new SalesRequest(startDate, endDate);

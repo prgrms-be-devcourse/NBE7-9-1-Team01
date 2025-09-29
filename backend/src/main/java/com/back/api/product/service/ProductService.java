@@ -56,7 +56,7 @@ public class ProductService {
         return productList;
     }
 
-    public Product findById(long productId) {
-        return productRepository.findById(productId).get();
+    public Product findById(Long productId) {
+        return productRepository.findById(productId).orElse(null);
     }
 }

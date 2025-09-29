@@ -2,6 +2,7 @@ package com.back.api.order.dto.response;
 
 import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,8 @@ import java.time.LocalDateTime;
 public record OrderStatusResponse(
         @Schema(description = "주문 id", example = "1")
         Long OrderId,
-        @Schema(description = "주문 날짜", example = "2023-01-01T12:00:00")
+        @Schema(description = "주문 날짜", example = "2025-09-01 12:00:00")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime orderDate,
         @Schema(description = "주문 상태", example = "PAID")
         OrderStatus orderStatus,
