@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-@Tag(name = "4. [보안] ", description = "인증 관련 API입니다.")
+@Tag(name = "5. [보안] ", description = "인증 관련 API입니다.")
 public class AuthController {
 
     private final AuthService authService;
