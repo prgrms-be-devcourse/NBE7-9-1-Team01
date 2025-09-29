@@ -22,6 +22,9 @@ public class Order extends BaseEntity {
 
     private LocalDateTime orderDate;
 
+    private String address;
+
+    private String postcode;
 
     public Order(Member member) {
         this.member = member;

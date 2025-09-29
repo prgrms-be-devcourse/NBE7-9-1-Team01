@@ -36,6 +36,9 @@ dependencies {
     annotationProcessor("com.querydsl:querydsl-apt:5.1.0:jakarta")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    testImplementation("com.icegreen:greenmail:2.0.1")
+    testImplementation("org.awaitility:awaitility:4.2.2")
 }
 
 tasks.withType<Test> {

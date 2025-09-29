@@ -7,6 +7,8 @@ import com.back.api.order.dto.response.OrderStatusResponse;
 import com.back.api.order.dto.response.SalesResponse;
 import com.back.api.product.service.ProductService;
 import com.back.domain.member.entity.Member;
+import com.back.domain.member.entity.Role;
+import com.back.domain.member.repository.MemberRepository;
 import com.back.domain.member.service.MemberService;
 import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderProduct;
@@ -35,6 +37,7 @@ public class OrderService {
     private final OrderProductService orderProductService;
     private final MemberService memberService;
     private final ProductService productService;
+    private final MemberRepository memberRepository;
 
 
     @Transactional
@@ -44,13 +47,20 @@ public class OrderService {
         LocalDateTime start = yesterday.withHour(14).withMinute(0).withSecond(0);
         LocalDateTime end = now.withHour(14).withMinute(0).withSecond(0);
 
-        // PROCESSING -> SHIPPED 처리 및 처리 완료된 주문 개수 반환
-        int processComplete = orderRepository.updateStatusToShipped(OrderStatus.PROCESSING, OrderStatus.SHIPPED, start, end);
+        // PAID -> SHIPPED 처리 및 처리 완료된 주문 개수 반환
+        int processComplete = orderRepository.updateStatusToShipped(OrderStatus.PAID, OrderStatus.SHIPPED, start, end);
 
         return processComplete;
     }
+
     @Transactional
-    public OrderDto createOrder(String email, long productId, long quantity) {
+    public OrderDto createOrder(String email, String address, String postcode, long productId, long quantity) {
+
+        if(!memberRepository.existsByEmail(email)) {
+            Member newMember = new Member(email, null, Role.ROLE_USER);
+            memberRepository.save(newMember);
+        }
+
         Member member = memberService.findByEmail(email);
         Product product = productService.findById(productId);
 
@@ -59,6 +69,8 @@ public class OrderService {
                 .member(member)
                 .orderDate(LocalDateTime.now())
                 .orderStatus(OrderStatus.PENDING)
+                .address(address)
+                .postcode(postcode)
                 .build();
         order = orderRepository.save(order);
         OrderProduct orderProduct = new OrderProduct(order, product, quantity);

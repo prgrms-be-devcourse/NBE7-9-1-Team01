@@ -32,22 +32,22 @@ public class OrderServiceTest {
     void createForDailyOrderProcess(OrderStatus orderStatus, LocalDateTime orderDate) {
         String email = "test@exampl.com";
         String password = "test";
-        String address = "test";
-        String postcode = "test";
         Role role = Role.ROLE_USER;
-        Member member = new Member(email, password, address, postcode, role);
+        Member member = new Member(email, password, role);
         memberRepository.save(member);
 
-        Order order = new Order(member, orderStatus, orderDate);
+        String address = "test";
+        String postcode = "test";
+        Order order = new Order(member, orderStatus, orderDate, address, postcode);
 
         orderRepository.save(order);
     }
 
     @Test
-    @DisplayName("어제 14시 ~ 오늘 14시 주문 처리, PROCESSING -> SHIPPED")
+    @DisplayName("어제 14시 ~ 오늘 14시 주문 처리, PAID -> SHIPPED")
     void dailyOrderProcess() {
-        // 오늘 14:00:00에 생성된 PROCESSING 주문
-        OrderStatus orderStatus = OrderStatus.PROCESSING;
+        // 오늘 14:00:00에 생성된 PAID 주문
+        OrderStatus orderStatus = OrderStatus.PAID;
         LocalDateTime orderDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
         createForDailyOrderProcess(orderStatus, orderDate);
 
@@ -59,8 +59,8 @@ public class OrderServiceTest {
     @Test
     @DisplayName("어제 14시 ~ 오늘 14시 이외 주문 처리 불가")
     void dailyOrderProcess_outOfRange() {
-        // 오늘 14:00:01에 생성된 PROCESSING 주문
-        OrderStatus orderStatus = OrderStatus.PROCESSING;
+        // 오늘 14:00:01에 생성된 PAID 주문
+        OrderStatus orderStatus = OrderStatus.PAID;
         LocalDateTime orderDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(1);
         createForDailyOrderProcess(orderStatus, orderDate);
 
