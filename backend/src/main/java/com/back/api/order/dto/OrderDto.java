@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,13 @@ public record OrderDto(
 
         @Schema(description = "주문 상품 목록")
         List<OrderProductDto> orderProducts
+        
+        @Schema(description = "주문 상품 주소")
+        String orderAddress,
+  
+        @Schema(description = "주문 상품 우편 번호")
+        String orderPostcode,
+        
 ) {
     // Order 엔티티를 Dto로 변환하는 생성자
     public OrderDto(Order order, List<OrderProduct> orderProducts) {
@@ -30,6 +38,8 @@ public record OrderDto(
                 order.getId(),
                 order.getMember().getEmail(),
                 order.getOrderDate(),
+                order.getAddress(),
+                order.getPostcode(),
                 orderProducts.stream()
                         .map(OrderProductDto::new)
                         .collect(Collectors.toList())

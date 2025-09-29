@@ -29,9 +29,17 @@ public class OrderController {
             @Schema(description = "회원 이메일", example = "user1@naver.com")
             @NotNull(message = "회원 이메일은 필수입니다.")
             String email,
+
             @Schema(description = "상품 ID", example = "1")
             @NotNull(message = "상품 ID는 필수입니다.")
             Long productId,
+      
+            @Schema(description = "주소", example = "경기도 부천")
+            String address,
+      
+            @Schema(description = "우편 번호", example = "55555")
+            String postcode,
+
             @Schema(description = "주문 수량", example = "2")
             Long quantity
     ){}
@@ -41,7 +49,7 @@ public class OrderController {
     public ApiResponse<OrderDto> createOrder(
             @RequestBody @Valid OrderCreateReqBody reqBody
     ){
-        OrderDto orderDto = orderService.createOrder(reqBody.email(), reqBody.productId(), reqBody.quantity());
+        OrderDto orderDto = orderService.createOrder(reqBody.email(), reqBody.address(), reqBody.postcode(), reqBody.productId(), reqBody.quantity());
 
         return ApiResponse.ok("주문 생성 완료", orderDto
         );
