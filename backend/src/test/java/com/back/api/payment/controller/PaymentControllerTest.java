@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -63,8 +64,8 @@ class PaymentControllerTest {
         memberRepository.save(member);
         Product product1 = productRepository.findById(1L).orElse(null);
         Product product2 = productRepository.findById(2L).orElse(null);
-        Order order = new Order(member, OrderStatus.PENDING, LocalDate.now());
-        Order order1 = new Order(member, OrderStatus.CANCELED, LocalDate.now());
+        Order order = new Order(member, OrderStatus.PENDING, LocalDateTime.now());
+        Order order1 = new Order(member, OrderStatus.CANCELED, LocalDateTime.now());
         orderRepository.save(order);
         orderRepository.save(order1);
 

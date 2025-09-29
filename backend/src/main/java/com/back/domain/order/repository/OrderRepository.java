@@ -15,7 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Order o SET o.orderStatus = :shipped " +
             "WHERE o.orderStatus = :processing " +
-            "AND o.createDate BETWEEN :start AND :end")
+            "AND o.orderDate BETWEEN :start AND :end")
     int updateStatusToShipped(
             @Param("processing") OrderStatus processing,
             @Param("shipped") OrderStatus shipped,

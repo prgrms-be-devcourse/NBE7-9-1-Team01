@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    private LocalDate orderDate;
+    private LocalDateTime orderDate;
 
 
     public Order(Member member) {

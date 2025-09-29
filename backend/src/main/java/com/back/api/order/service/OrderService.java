@@ -49,7 +49,7 @@ public class OrderService {
 //        Order order = new Order(member, LocalDate.now(), OrderStatus.PENDING);
         Order order = Order.builder()
                 .member(member)
-                .orderDate(LocalDate.now())
+                .orderDate(LocalDateTime.now())
                 .orderStatus(OrderStatus.PENDING)
                 .build();
         order = orderRepository.save(order);
