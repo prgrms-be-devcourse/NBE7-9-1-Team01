@@ -1,5 +1,6 @@
 package com.back.global.security;
 
+import com.back.domain.member.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,8 +16,9 @@ public class JwtTokenProvider {
     private long expireSeconds = 1000L * 60 * 60; // 1시간
 
     // JWT 발급
-    public String createToken(String email) {
+    public String createToken(String email, Role role) {
         Claims claims = Jwts.claims().setSubject(email);
+        claims.put("role", role.name()); // role 추가
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)
@@ -43,5 +45,14 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public Role getRoleFromToken(String token) {
+        String role = (String) Jwts.parser()
+                .setSigningKey(secretKey.getBytes())
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role");
+        return Role.valueOf(role);
     }
 }

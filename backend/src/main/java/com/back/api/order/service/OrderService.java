@@ -1,6 +1,7 @@
 package com.back.api.order.service;
 
 
+import com.back.api.member.service.MemberService;
 import com.back.api.order.dto.OrderDto;
 import com.back.api.order.dto.requset.SalesRequest;
 import com.back.api.order.dto.response.OrderStatusResponse;
@@ -9,7 +10,6 @@ import com.back.api.product.service.ProductService;
 import com.back.domain.member.entity.Member;
 import com.back.domain.member.entity.Role;
 import com.back.domain.member.repository.MemberRepository;
-import com.back.domain.member.service.MemberService;
 import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderProduct;
 import com.back.domain.order.repository.OrderRepository;
