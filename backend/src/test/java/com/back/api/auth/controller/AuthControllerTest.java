@@ -1,4 +1,4 @@
-package com.back.api.auth;
+package com.back.api.auth.controller;
 
 import com.back.api.auth.dto.request.AuthRequest;
 import com.back.api.auth.dto.response.AuthResponse;
@@ -8,7 +8,6 @@ import com.back.domain.auth.repository.AuthRepository;
 import com.back.global.security.JwtTokenProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
