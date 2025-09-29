@@ -30,6 +30,10 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    testImplementation("com.icegreen:greenmail:2.0.1")
+    testImplementation("org.awaitility:awaitility:4.2.2")
+
 }
 
 tasks.withType<Test> {
