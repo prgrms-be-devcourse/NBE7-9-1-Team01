@@ -1,9 +1,0 @@
-package com.back.domain.auth.repository;
-
-import com.back.domain.auth.entity.Auth;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface AuthRepository extends JpaRepository<Auth,Long> {
-    Auth findByEmail(String email);
-
-}
