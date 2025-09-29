@@ -1,17 +1,11 @@
 package com.back.domain.order.entity;
 
 import com.back.domain.member.entity.Member;
-import com.back.domain.product.entity.Product;
 import com.back.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.cglib.core.Local;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Builder
 @Getter
@@ -29,6 +23,9 @@ public class Order extends BaseEntity {
 
     private LocalDateTime orderDate;
 
+    private String address;
+
+    private String postcode;
 
     public Order(Member member) {
         this.member = member;

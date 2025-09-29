@@ -24,6 +24,8 @@ public class OrderController {
 
     record OrderCreateReqBody(
             String email,
+            String address,
+            String postcode,
             Long productId,
             Long quantity
     ){}
@@ -32,7 +34,7 @@ public class OrderController {
     public ApiResponse<OrderDto> createOrder(
             @RequestBody @Valid OrderCreateReqBody reqBody
     ){
-        OrderDto orderDto = orderService.createOrder(reqBody.email(), reqBody.productId(), reqBody.quantity());
+        OrderDto orderDto = orderService.createOrder(reqBody.email(), reqBody.address(), reqBody.postcode(), reqBody.productId(), reqBody.quantity());
 
         return ApiResponse.ok("주문 생성 완료", orderDto
         );

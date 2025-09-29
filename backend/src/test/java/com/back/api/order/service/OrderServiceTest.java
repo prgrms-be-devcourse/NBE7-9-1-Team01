@@ -32,13 +32,13 @@ public class OrderServiceTest {
     void createForDailyOrderProcess(OrderStatus orderStatus, LocalDateTime orderDate) {
         String email = "test@exampl.com";
         String password = "test";
-        String address = "test";
-        String postcode = "test";
         Role role = Role.ROLE_USER;
-        Member member = new Member(email, password, address, postcode, role);
+        Member member = new Member(email, password, role);
         memberRepository.save(member);
 
-        Order order = new Order(member, orderStatus, orderDate);
+        String address = "test";
+        String postcode = "test";
+        Order order = new Order(member, orderStatus, orderDate, address, postcode);
 
         orderRepository.save(order);
     }

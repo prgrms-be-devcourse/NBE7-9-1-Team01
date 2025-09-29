@@ -13,6 +13,8 @@ public record OrderDto(
         Long orderId,
         String memberEmail,
         LocalDateTime orderDate,
+        String orderAddress,
+        String orderPostcode,
         List<OrderProductDto> orderProducts
 ) {
     // Order 엔티티를 Dto로 변환하는 생성자
@@ -21,6 +23,8 @@ public record OrderDto(
                 order.getId(),
                 order.getMember().getEmail(),
                 order.getOrderDate(),
+                order.getAddress(),
+                order.getPostcode(),
                 orderProducts.stream()
                         .map(OrderProductDto::new)
                         .collect(Collectors.toList())
