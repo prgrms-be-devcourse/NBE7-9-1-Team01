@@ -1,6 +1,8 @@
 package com.back.api.order.controller;
 
+import com.back.api.order.dto.requset.SalesRequest;
 import com.back.api.order.dto.response.OrderStatusResponse;
+import com.back.api.order.dto.response.SalesResponse;
 import com.back.api.order.service.OrderService;
 import com.back.global.dto.requset.PageRequestDto;
 import com.back.global.dto.response.ApiResponse;
@@ -8,9 +10,14 @@ import com.back.global.dto.response.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/order")
@@ -26,5 +33,15 @@ public class AdminOrderController {
     public ApiResponse<PageResponse<OrderStatusResponse>> getOrderStats(PageRequestDto request) {
         PageResponse<OrderStatusResponse> responses = orderService.getOrderStats(request);
         return ApiResponse.ok("주문 통계 조회 성공",responses);
+    }
+
+    @GetMapping("/sales")
+    public ApiResponse<List<SalesResponse>> getSales(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
+    ) {
+        SalesRequest request = new SalesRequest(startDate, endDate);
+        List<SalesResponse> response = orderService.getSales(request);
+        return ApiResponse.ok("제품 판매량 데이터입니다.", response);
     }
 }

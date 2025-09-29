@@ -2,7 +2,9 @@ package com.back.api.order.service;
 
 
 import com.back.api.order.dto.OrderDto;
+import com.back.api.order.dto.requset.SalesRequest;
 import com.back.api.order.dto.response.OrderStatusResponse;
+import com.back.api.order.dto.response.SalesResponse;
 import com.back.api.product.service.ProductService;
 import com.back.domain.member.entity.Member;
 import com.back.domain.member.service.MemberService;
@@ -20,6 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -141,5 +145,29 @@ public class OrderService {
 
     private Pageable getPageable(PageRequestDto request) {
         return request.toPageable();
+    }
+
+    public List<SalesResponse> getSales(SalesRequest request) {
+        SalesRequest requestDto = validSalesRequest(request);
+        return orderProductService.getSales(requestDto.startDate(), requestDto.endDate());
+    }
+
+    private SalesRequest validSalesRequest(SalesRequest request) {
+        LocalDate startDate = request.startDate();
+        LocalDate endDate = request.endDate();
+
+        if (startDate == null) {
+            startDate = LocalDate.now().minusMonths(1);
+        }
+
+        if (endDate == null) {
+            endDate = LocalDate.now();
+        }
+
+        if (startDate.isAfter(endDate)) {
+            throw new ErrorException(ErrorCode.INVALID_DATE_RANGE);
+        }
+
+        return request;
     }
 }

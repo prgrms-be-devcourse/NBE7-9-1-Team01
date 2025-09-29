@@ -11,7 +11,8 @@ public enum ErrorCode {
     NOT_FOUND_ORDER(HttpStatus.NOT_FOUND,"주문을 찾을 수 없습니다."),
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND,"제품을 찾을 수 없습니다."),
     INVALID_ORDER_STATE(HttpStatus.BAD_REQUEST,"결제 상태를 확인해주세요."),
-    NOT_FOUND_PAYMENT(HttpStatus.NOT_FOUND,"결제 내역을 찾을 수 없습니다.");
+    NOT_FOUND_PAYMENT(HttpStatus.NOT_FOUND,"결제 내역을 찾을 수 없습니다."),
+    INVALID_DATE_RANGE(HttpStatus.BAD_REQUEST, "시작일은 마지막날보다 이전이어야 합니다."),;
 
 
     private final HttpStatus httpStatus;
