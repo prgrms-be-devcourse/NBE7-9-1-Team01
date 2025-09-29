@@ -2,13 +2,13 @@ package com.back.api.order.controller;
 
 import com.back.api.order.dto.OrderDto;
 import com.back.api.order.service.OrderService;
-import com.back.domain.order.entity.Order;
 import com.back.global.dto.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,10 +23,16 @@ public class OrderController {
 
 
     //주문 등록
-
+    @Schema(name = "OrderCreateReqBody", description = "주문 생성 요청 DTO")
     record OrderCreateReqBody(
+
+            @Schema(description = "회원 이메일", example = "user1@naver.com")
+            @NotNull(message = "회원 이메일은 필수입니다.")
             String email,
+            @Schema(description = "상품 ID", example = "1")
+            @NotNull(message = "상품 ID는 필수입니다.")
             Long productId,
+            @Schema(description = "주문 수량", example = "2")
             Long quantity
     ){}
 
@@ -43,8 +49,14 @@ public class OrderController {
 
 
     //주문 수정
+    @Schema(name = "OrderUpdateReqBody", description = "주문 수정 요청 DTO")
     record OrderUpdateReqBody(
+            @Schema(description = "상품 ID", example = "1")
+            @NotNull(message = "상품 ID는 필수입니다.")
             Long productId,
+
+            @Schema(description = "수량", example = "3")
+            @NotNull(message = "수량은 필수입니다.")
             Long quantity
     ){}
     @Operation(summary = "주문 수정 API", description = "주문을 수정합니다.")

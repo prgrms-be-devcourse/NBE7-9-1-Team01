@@ -11,17 +11,13 @@ import jakarta.validation.constraints.Positive;
  */
 @Schema(name = "OrderProductDto", description = "주문 상품 DTO")
 public record OrderProductDto(
-        @Schema(description = "상품 ID", example = "1")
-        @NotNull(message = "상품 ID는 필수입니다.")
+        @Schema(description = "상품 ID")
         Long productId,
 
-        @Schema(description = "상품 이름", example = "Columbia Narino")
-        @NotBlank(message = "상품 이름은 필수입니다.")
+        @Schema(description = "상품 이름")
         String productName,
 
-        @Schema(description = "주문 수량", example = "2")
-        @NotNull(message = "수량은 필수입니다.")
-        @Positive(message = "수량은 1개 이상이어야 합니다.")
+        @Schema(description = "주문 수량")
         Long quantity
 ) {
     // OrderProduct 엔티티를 DTO로 변환하는 생성자
