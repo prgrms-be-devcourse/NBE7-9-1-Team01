@@ -64,7 +64,7 @@ public class PaymentService {
                 payment.getPaymentMethod().getMethodName(),
                 payment.getAmount(),
                 payment.getCreateDate(),
-                order.getMember().getAddress(),
+                order.getAddress(),
                 lines
         ));
 

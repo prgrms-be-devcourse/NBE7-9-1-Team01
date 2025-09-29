@@ -27,8 +27,8 @@ public record OrderStatusResponse(
                 order.getOrderDate(),
                 order.getOrderStatus(),
                 order.getMember().getEmail(),
-                order.getMember().getPostcode(),
-                order.getMember().getAddress()
+                order.getPostcode(),
+                order.getAddress()
         );
     }
 }
