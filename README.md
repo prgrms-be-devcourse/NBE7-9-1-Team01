@@ -26,7 +26,8 @@ Grids & Circles는 작은 로컬 카페에서 운영하는 온라인 커피 원�
 |<img src="https://github.com/myoungjinseo.png" width="150px"/>|<img src="https://github.com/qivvoon.png" width="150px"/>|<img src="https://github.com/tobbot16.png" width="150px"/>|<img src="https://github.com/ruddnjs0407.png" width="150px"/>|
 | :---------------:|:---------------:|:---------------:|:---------------:|
 |[서명진](https://github.com/myoungjinseo)|[강지원](https://github.com/qivvoon)|[김윤수](https://github.com/tobbot16)|[박경원](https://github.com/ruddnjs0407)|
-|팀장 / 제품 API / 결제 API / 관리자 API | 주문 스케줄러 / 프론트 엔드 코드 작성 | 주문 API / 로그인 | 결제 SMTP |
+|팀장|팀원|팀원|탐원|
+|제품 API <br/> 결제 API <br/> 관리자 API <br/> 관리자 로그인| 주문 스케줄러 <br/> 프론트 엔드 코드 작성 | 주문 API <br/> 관리자 로그인 | 결제 SMTP |
 
 
 <div id="schedule">
