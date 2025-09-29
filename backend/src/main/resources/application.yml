@@ -20,3 +20,7 @@ springdoc:
     operations-sorter: method
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
+
+order:
+  schedule:
+    cron: 0 0 14 * * ?

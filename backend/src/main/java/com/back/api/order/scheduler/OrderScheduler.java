@@ -11,7 +11,7 @@ public class OrderScheduler {
     private final OrderService orderService;
 
     // 매일 14:00에 주문 배송 처리
-    @Scheduled(cron = "0 0 14 * * ?")
+    @Scheduled(cron = "${order.schedule.cron}")
     public void dailyOrderSchedule() {
         orderService.dailyOrderProcess();
     }
