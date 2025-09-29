@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 public class Member extends BaseEntity {
         private String email;
         private String password;
-        private String address;
-        private String postcode;
 
         @Enumerated(EnumType.STRING)
         private Role role;

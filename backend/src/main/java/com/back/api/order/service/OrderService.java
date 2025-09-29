@@ -4,6 +4,8 @@ package com.back.api.order.service;
 import com.back.api.order.dto.OrderDto;
 import com.back.api.product.service.ProductService;
 import com.back.domain.member.entity.Member;
+import com.back.domain.member.entity.Role;
+import com.back.domain.member.repository.MemberRepository;
 import com.back.domain.member.service.MemberService;
 import com.back.domain.order.entity.Order;
 import com.back.domain.order.entity.OrderProduct;
@@ -27,6 +29,7 @@ public class OrderService {
     private final OrderProductService orderProductService;
     private final MemberService memberService;
     private final ProductService productService;
+    private final MemberRepository memberRepository;
 
 
     @Transactional
@@ -43,7 +46,13 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDto createOrder(String email, long productId, long quantity) {
+    public OrderDto createOrder(String email, String address, String postcode, long productId, long quantity) {
+
+        if(!memberRepository.existsByEmail(email)) {
+            Member newMember = new Member(email, null, Role.ROLE_USER);
+            memberRepository.save(newMember);
+        }
+
         Member member = memberService.findByEmail(email);
         Product product = productService.findById(productId);
 
@@ -52,6 +61,8 @@ public class OrderService {
                 .member(member)
                 .orderDate(LocalDateTime.now())
                 .orderStatus(OrderStatus.PENDING)
+                .address(address)
+                .postcode(postcode)
                 .build();
         order = orderRepository.save(order);
         OrderProduct orderProduct = new OrderProduct(order, product, quantity);
