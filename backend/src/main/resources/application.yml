@@ -24,6 +24,8 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
+      mail.smtp.from: prdc.team01@gmail.com
+
     logging:
       level:
         org.springframework.web: DEBUG
