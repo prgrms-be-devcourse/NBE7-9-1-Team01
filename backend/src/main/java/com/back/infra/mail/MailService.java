@@ -40,7 +40,7 @@ public class MailService {
             MimeMessageHelper h = new MimeMessageHelper(mm, "UTF-8");
 
             if (from != null && !from.isBlank()) {
-                h.setFrom("prdc.team01@gmail.com", "Cafe");
+                h.setFrom(from);
             }
             h.setTo(e.buyerEmail());
             h.setSubject("[Cafe] 결제 완료 영수증 #" + e.paymentId());
@@ -53,7 +53,7 @@ public class MailService {
     }
 
     private String renderReceiptHtml(PaymentCompletedEvent e) throws IOException {
-        String template = readReceiptTemplate("templates/mail/receipt.html");
+        String template = readClasspathText("templates/mail/receipt.html");
 
         String paidAmount = fmtWon(e.paidAmount());
         String paidAt = formatDate(e.paidAt());
@@ -84,11 +84,10 @@ public class MailService {
                 .replace("{ITEM_ROWS}", rows.toString());
     }
 
-    private String readReceiptTemplate() {
-        try (InputStream in = receiptTemplate.getInputStream()) {
+    private String readClasspathText(String path) throws IOException {
+        ClassPathResource r = new ClassPathResource(path);
+        try (InputStream in = r.getInputStream()) {
             return new String(in.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException ex) {
-            throw new IllegalStateException("영수증 템플릿 로드 실패: " + receiptTemplate, ex);
         }
     }
 
