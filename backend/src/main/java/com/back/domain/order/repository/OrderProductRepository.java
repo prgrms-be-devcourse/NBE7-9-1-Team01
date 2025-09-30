@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface OrderProductRepository extends JpaRepository<OrderProduct, Long>,OrderProductRepositoryCustom {
     List<OrderProduct> findByOrder(Order order);
+
+    void deleteAllByOrder(Order order);
 }

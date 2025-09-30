@@ -41,4 +41,8 @@ public class OrderProductService {
     public List<SalesResponse> getSales(LocalDate startDate, LocalDate endDate) {
         return orderProductRepository.getSalesByProduct(startDate, endDate);
     }
+
+    public void removeAllByorder(Order order) {
+        orderProductRepository.deleteAllByOrder(order);
+    }
 }

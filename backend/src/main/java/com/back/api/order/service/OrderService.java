@@ -121,7 +121,7 @@ public class OrderService {
     //주문 삭제
     public void deleteOrder(long orderId){
         Order order = orderRepository.findById(orderId).get();
-
+        orderProductService.removeAllByorder(order);
         orderRepository.delete(order);
     }
 
