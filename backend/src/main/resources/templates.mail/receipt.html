@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>[Grids & Circles] 결제 완료 영수증 #{paymentId}</title>
+    <style>
+        body { margin:0; background:#f2f4f7; color:#111; font:14px/1.65 -apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','Helvetica Neue',Arial,sans-serif; }
+        .wrap { max-width:720px; margin:0 auto; padding:28px 20px; }
+        .card { background:#fff; border-radius:14px; box-shadow:0 4px 22px rgba(0,0,0,.06); padding:22px 22px; margin-bottom:16px; }
+        .muted { color:#6b7280; }
+        h1,h2,h3,p { margin:0; }
+        .amount { font-size:32px; font-weight:800; letter-spacing:-0.3px; }
+        .row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+        .btns a { display:inline-block; padding:8px 10px; border-radius:10px; background:#f3f4f6; color:#374151; text-decoration:none; font-weight:600; margin-right:8px; }
+        .grid { display:grid; grid-template-columns: 160px 1fr; gap:8px 14px; margin-top:14px; }
+        .key { color:#6b7280; }
+        .val { font-weight:600; }
+        table.items { width:100%; border-collapse:collapse; margin-top:6px; }
+        table.items th, table.items td { padding:10px 8px; border-top:1px solid #e5e7eb; }
+        table.items th { text-align:left; color:#6b7280; font-weight:700; border-bottom:1px solid #e5e7eb; }
+        .right { text-align:right; white-space:nowrap; }
+        .total-row td { border-top:2px solid #111; font-weight:800; }
+        .footer { font-size:12px; color:#6b7280; margin-top:12px; }
+        .brand { font-weight:800; }
+        .pill { display:inline-block; padding:2px 8px; border-radius:999px; background:#eef2ff; color:#4338ca; font-weight:700; font-size:12px; vertical-align:1px; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <!-- SUMMARY CARD -->
+    <div class="card">
+        <div class="row" style="margin-bottom:8px">
+            <div>
+                <div class="muted" style="font-weight:700;">Receipt from <span class="brand">Cafe</span></div>
+                <div class="amount">{paidAmount}</div>
+                <div class="muted">Paid {paidAt}</div>
+            </div>
+            <div class="pill">#{paymentId}</div>
+        </div>
+        <div class="btns" style="margin:8px 0 6px;">
+            <a href="#">Download invoice</a>
+            <a href="#">Download receipt</a>
+        </div>
+        <div class="grid">
+            <div class="key">Receipt number</div><div class="val">{paymentId}</div>
+            <div class="key">Order number</div><div class="val">{orderId}</div>
+            <div class="key">Payment method</div><div class="val">{paymentMethod}</div>
+            <div class="key">Buyer</div><div class="val">{buyerEmail}</div>
+            <div class="key">Address</div><div class="val">{address}</div>
+        </div>
+    </div>
+
+    <!-- ITEMS CARD -->
+    <div class="card">
+        <div class="muted" style="font-weight:700;">Receipt #{paymentId}</div>
+        <div class="muted">구매 내역</div>
+        <table class="items" role="presentation" aria-label="구매 내역">
+            <thead>
+            <tr>
+                <th>상품명</th>
+                <th class="right">수량</th>
+                <th class="right">단가</th>
+                <th class="right">소계</th>
+            </tr>
+            </thead>
+            <tbody>
+            {ITEM_ROWS}
+            <tr class="total-row">
+                <td colspan="3" class="right">총 결제금액</td>
+                <td class="right">{paidAmount}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="footer">
+            문의가 필요하신가요? support@your-cafe.example 로 연락주세요.
+        </div>
+    </div>
+</div>
+</body>
+</html>
